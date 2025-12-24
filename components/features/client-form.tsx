@@ -1,6 +1,6 @@
 "use client";
 
-import { createClient } from "@/server/actions/client";
+// Using API endpoint instead of server action for client creation
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,24 +11,42 @@ export function ClientForm() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    async function onSubmit(formData: FormData) {
+    async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
         setLoading(true);
         setError("");
         try {
-            const result = await createClient(formData);
-            if (result?.error) {
-                setError(result.error);
+            const form = e.currentTarget as HTMLFormElement;
+            const fd = new FormData(form);
+            const body = {
+                name: fd.get('name'),
+                company: fd.get('company'),
+                email: fd.get('email'),
+                phone: fd.get('phone'),
+                notes: fd.get('notes'),
+            };
+
+            const res = await fetch('/api/clients', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body),
+            });
+            const json = await res.json();
+            if (!res.ok) {
+                setError(json?.error || 'Something went wrong');
                 setLoading(false);
+            } else {
+                // Redirect to clients list
+                window.location.href = '/clients';
             }
-            // If success, server action handles redirect
         } catch (e) {
-            setError("Something went wrong");
+            setError('Something went wrong');
             setLoading(false);
         }
     }
 
     return (
-        <form action={onSubmit} className="space-y-6 max-w-2xl bg-white p-6 rounded-lg border border-slate-200">
+        <form onSubmit={onSubmit} className="space-y-6 max-w-2xl bg-white p-6 rounded-lg border border-slate-200">
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <div className="space-y-2">
                     <Label htmlFor="name">Client Name *</Label>

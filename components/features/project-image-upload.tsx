@@ -2,10 +2,9 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { uploadFile } from "@/server/actions/file";
+import { saveFileRecord } from "@/server/actions/file";
 import { updateProjectScreenshot } from "@/server/actions/project";
-import { Upload, X } from "lucide-react";
-import Image from "next/image";
+import { Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export function ProjectImageUpload({ projectId, currentImage }: { projectId: string; currentImage?: string }) {
@@ -16,18 +15,35 @@ export function ProjectImageUpload({ projectId, currentImage }: { projectId: str
         if (!e.target.files?.[0]) return;
 
         setUploading(true);
-        const formData = new FormData();
-        formData.append("file", e.target.files[0]);
-        formData.append("projectId", projectId);
+        const file = e.target.files[0];
 
         try {
-            // First upload file
-            const fileResult = await uploadFile(formData);
+            // 1. Get signed URL
+            const res = await fetch("/api/uploads/signed", {
+                method: "POST",
+                body: JSON.stringify({ filename: file.name, contentType: file.type }),
+            });
+
+            if (!res.ok) throw new Error("Failed to get upload URL");
+
+            const { url, key } = await res.json();
+
+            // 2. Upload to S3
+            await fetch(url, {
+                method: "PUT",
+                body: file,
+                headers: { "Content-Type": file.type },
+            });
+
+            // 3. Save record
+            const fileResult = await saveFileRecord(projectId, file.name, key);
             if (fileResult?.success) {
                 // Then link to project screenshot field
                 await updateProjectScreenshot(projectId, fileResult.file.fileUrl);
                 router.refresh();
             }
+        } catch (err) {
+            console.error(err);
         } finally {
             setUploading(false);
         }

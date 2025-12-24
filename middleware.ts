@@ -7,8 +7,13 @@ export async function middleware(request: NextRequest) {
 
     const pathname = request.nextUrl.pathname;
 
-    // Public paths that don't require auth
-    const isAuthPage = pathname.startsWith("/login") || pathname.startsWith("/signup");
+    // Public paths
+    const isPublicPath =
+        pathname === "/" ||
+        pathname.startsWith("/login") ||
+        pathname.startsWith("/signup") ||
+        pathname.startsWith("/profile/") || // Public profiles
+        pathname.startsWith("/api/uploads/signed"); // Public upload endpoint (auth handled inside)
 
     // Decrypt session
     let parsedSession = null;
@@ -20,14 +25,13 @@ export async function middleware(request: NextRequest) {
         }
     }
 
-    // 1. If user is logged in and tries to access login/signup, redirect to dashboard
-    if (isAuthPage && parsedSession) {
-        return NextResponse.redirect(new URL("/", request.url));
+    // 1. If user is logged in and tries to access login/signup, redirect to dashboard or home
+    if ((pathname.startsWith("/login") || pathname.startsWith("/signup")) && parsedSession) {
+        return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 
     // 2. If user is NOT logged in and tries to access protected routes, redirect to login
-    if (!parsedSession && !isAuthPage && pathname !== "/api/seed") {
-        // Basic protection for all routes except auth pages and public assets (usually handled by Next.js matcher)
+    if (!parsedSession && !isPublicPath && pathname !== "/api/seed") {
         return NextResponse.redirect(new URL("/login", request.url));
     }
 

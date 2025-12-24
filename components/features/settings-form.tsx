@@ -19,31 +19,44 @@ function SettingsForm({ user }: { user: any }) {
     const [message, setMessage] = useState("");
     const [image, setImage] = useState(user.image);
 
-    async function handleSubmit(formData: FormData) {
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        const form = e.currentTarget as HTMLFormElement;
+        const fd = new FormData(form);
+
         const data = {
-            username: formData.get("username") as string,
-            bio: formData.get("bio") as string,
+            username: fd.get("username") as string,
+            bio: fd.get("bio") as string,
             image: image, // Use state for image
-            skills: (formData.get("skills") as string).split(",").map(s => s.trim()).filter(Boolean),
+            skills: (fd.get("skills") as string || "").split(",").map((s: string) => s.trim()).filter(Boolean),
             socials: {
-                twitter: formData.get("twitter") as string,
-                linkedin: formData.get("linkedin") as string,
-                github: formData.get("github") as string,
-                website: formData.get("website") as string,
+                twitter: fd.get("twitter") as string,
+                linkedin: fd.get("linkedin") as string,
+                github: fd.get("github") as string,
+                website: fd.get("website") as string,
             }
         };
 
-        const result = await updateProfile(data);
-        if (result.success) {
-            setMessage("Profile updated successfully!");
-            router.refresh();
-        } else {
-            setMessage("Error updating profile.");
+        try {
+            const res = await fetch('/api/profile/update', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+            const json = await res.json();
+            if (!res.ok) {
+                setMessage(json?.error || 'Error updating profile.');
+            } else {
+                setMessage('Profile updated successfully!');
+                router.refresh();
+            }
+        } catch (err) {
+            setMessage('Network error');
         }
     }
 
     return (
-        <form action={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
             <div className="flex justify-end">
                 {user.username && (
                     <Link href={`/profile/${user.username}`} target="_blank" className="text-sm font-medium text-blue-600 hover:underline flex items-center gap-1">

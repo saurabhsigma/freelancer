@@ -29,7 +29,7 @@ export async function handleLogin(formData: FormData) {
     }
 
     await login({ id: user._id.toString(), email: user.email, name: user.name });
-    redirect("/");
+    redirect("/dashboard");
 }
 
 export async function handleSignup(formData: FormData) {
@@ -57,7 +57,7 @@ export async function handleSignup(formData: FormData) {
     });
 
     await login({ id: user._id.toString(), email: user.email, name: user.name });
-    redirect("/");
+    redirect("/dashboard");
 }
 
 export async function handleLogout() {

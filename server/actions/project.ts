@@ -2,6 +2,7 @@
 
 import connectToDatabase from "@/lib/db";
 import { Project } from "@/models/Project";
+import { Client } from "@/models/Client";
 import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -105,5 +106,46 @@ export async function updateProjectScreenshot(id: string, url: string) {
         return { success: true };
     } catch (error) {
         return { error: "Failed to update screenshot" };
+    }
+}
+// ... existing imports
+
+export async function updateProject(id: string, data: any) {
+    const session = await getSession();
+    if (!session?.user?.id) return { error: "Unauthorized" };
+
+    try {
+        await connectToDatabase();
+        const project = await Project.findOne({ _id: id, userId: session.user.id });
+        if (!project) return { error: "Project not found" };
+
+        // Update basic fields
+        if (data.title) project.title = data.title;
+        if (data.status) project.status = data.status;
+        if (data.scope) project.scope = data.scope;
+        if (data.paymentType) project.paymentType = data.paymentType;
+        if (data.startDate) project.startDate = new Date(data.startDate);
+        if (data.dueDate) project.dueDate = new Date(data.dueDate);
+
+        // Update extended fields
+        if (data.technologies) project.technologies = data.technologies;
+        if (data.repoUrl !== undefined) project.repoUrl = data.repoUrl;
+        if (data.liveUrl !== undefined) project.liveUrl = data.liveUrl;
+        if (data.longDescription !== undefined) project.longDescription = data.longDescription;
+        if (data.challenges !== undefined) project.challenges = data.challenges;
+
+        await project.save();
+
+        revalidatePath("/projects");
+        revalidatePath(`/projects/${id}`);
+        // Ensure profile is updated
+        if (session.user.username) {
+            revalidatePath(`/profile/${session.user.username}`);
+        }
+
+        return { success: true };
+    } catch (error) {
+        console.error("Failed to update project", error);
+        return { error: "Failed to update project" };
     }
 }

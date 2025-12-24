@@ -1,6 +1,10 @@
+// ... imports
+// Fixed unused vars by removing them or prefixing with _
+
+// Removed unused NextRequest, NextResponse imports if not used.
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
+// import { NextRequest, NextResponse } from "next/server"; // removed
 
 const secretKey = process.env.JWT_SECRET || "default_local_secret_please_change_in_prod";
 const key = new TextEncoder().encode(secretKey);
@@ -42,7 +46,7 @@ export async function getSession() {
     if (!session) return null;
     try {
         return await decrypt(session);
-    } catch (error) {
+    } catch (_error) {
         return null;
     }
 }

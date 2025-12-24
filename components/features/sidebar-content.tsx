@@ -79,15 +79,21 @@ export function SidebarContent({ username }: { username?: string }) {
                         Settings
                     </Button>
                 </Link>
-                <form action={handleLogout}>
-                    <button
-                        type="submit"
-                        className="flex w-full items-center px-3 py-2 text-sm font-medium text-slate-400 hover:text-white rounded-md hover:bg-slate-800 transition-colors"
-                    >
-                        <LogOut className="mr-3 h-5 w-5" />
-                        Sign out
-                    </button>
-                </form>
+                <button
+                    type="button"
+                    onClick={async () => {
+                        try {
+                            await fetch("/api/auth/logout", { method: "POST" });
+                            window.location.href = "/login";
+                        } catch (e) {
+                            // ignore
+                        }
+                    }}
+                    className="flex w-full items-center px-3 py-2 text-sm font-medium text-slate-400 hover:text-white rounded-md hover:bg-slate-800 transition-colors"
+                >
+                    <LogOut className="mr-3 h-5 w-5" />
+                    Sign out
+                </button>
             </div>
         </div>
     );

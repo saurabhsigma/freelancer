@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { handleLogin } from "@/server/actions/auth";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,14 +10,33 @@ export default function LoginPage() {
     const [error, setError] = useState<string | null>(null);
     const [pending, setPending] = useState(false);
 
-    async function onSubmit(formData: FormData) {
+    async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
         setPending(true);
         setError(null);
         try {
-            const result = await handleLogin(formData);
-            if (result?.error) {
-                setError(result.error);
+            const form = e.currentTarget as HTMLFormElement;
+            const fd = new FormData(form);
+            const body = {
+                email: fd.get("email") as string,
+                password: fd.get("password") as string,
+            };
+
+            const res = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body),
+            });
+
+            const json = await res.json();
+            if (!res.ok) {
+                setError(json?.error || "Login failed");
+            } else {
+                // Successful login — redirect to home
+                window.location.href = "/";
             }
+        } catch (err) {
+            setError("Network error");
         } finally {
             setPending(false);
         }
@@ -33,7 +51,7 @@ export default function LoginPage() {
                 </p>
             </div>
 
-            <form action={onSubmit} className="space-y-6">
+            <form onSubmit={onSubmit} className="space-y-6">
                 <div>
                     <Label htmlFor="email">Email address</Label>
                     <div className="mt-1">

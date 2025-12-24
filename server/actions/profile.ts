@@ -9,6 +9,9 @@ import { revalidatePath } from "next/cache";
 export async function updateProfile(data: {
     username?: string;
     bio?: string;
+    headline?: string;
+    location?: string;
+    resumeUrl?: string;
     image?: string;
     skills?: string[];
     socials?: {
@@ -31,6 +34,9 @@ export async function updateProfile(data: {
             update.username = data.username.toLowerCase().trim().replace(/[^a-z0-9-]/g, '');
         }
         if (data.bio) update.bio = data.bio;
+        if (data.headline) update.headline = data.headline;
+        if (data.location) update.location = data.location;
+        if (data.resumeUrl) update.resumeUrl = data.resumeUrl;
         if (data.image) update.image = data.image; // Handle image update
         if (data.skills) update.skills = data.skills;
         if (data.socials) update.socials = data.socials;

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Upload, X } from "lucide-react";
 import Image from "next/image";
-import { uploadFile } from "@/server/actions/file";
+import { updateProfile } from "@/server/actions/profile";
 
 export function ProfileImageUpload({ initialImage, onImageChange }: { initialImage?: string, onImageChange: (url: string) => void }) {
     const [image, setImage] = useState<string | undefined>(initialImage);
@@ -16,17 +16,36 @@ export function ProfileImageUpload({ initialImage, onImageChange }: { initialIma
         const file = e.target.files[0];
         setUploading(true);
 
-        const formData = new FormData();
-        formData.append("file", file);
+        try {
+            // 1. Get signed URL
+            const res = await fetch("/api/uploads/signed", {
+                method: "POST",
+                body: JSON.stringify({ filename: file.name, contentType: file.type }),
+            });
 
-        const result = await uploadFile(formData);
+            if (!res.ok) throw new Error("Failed to get upload URL");
 
-        if (result.success && result.file) {
-            setImage(result.file.url);
-            onImageChange(result.file.url);
+            const { url, publicUrl } = await res.json();
+
+            // 2. Upload to S3
+            await fetch(url, {
+                method: "PUT",
+                body: file,
+                headers: { "Content-Type": file.type },
+            });
+
+            // 3. Update Profile
+            const result = await updateProfile({ image: publicUrl });
+
+            if (result.success) {
+                setImage(publicUrl);
+                onImageChange(publicUrl);
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setUploading(false);
         }
-
-        setUploading(false);
     }
 
     return (
