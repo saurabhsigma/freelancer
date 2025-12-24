@@ -157,7 +157,7 @@ export function ProfileEditor({ initialConfig, user, projects }: ProfileEditorPr
                                         </div>
                                     )}
                                     <h3 className="font-bold">{theme.name}</h3>
-                                    <p className="text-xs text-slate-500 mt-1">{theme.description}</p>
+                                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{theme.description}</p>
                                 </Card>
                             ))}
                         </div>
@@ -219,7 +219,7 @@ export function ProfileEditor({ initialConfig, user, projects }: ProfileEditorPr
                             <Label className="text-base font-semibold">Custom Colors</Label>
                             <div className="grid grid-cols-1 gap-4">
                                 <div className="flex items-center justify-between">
-                                    <Label className="text-xs text-slate-500 uppercase">Background</Label>
+                                    <Label className="text-xs text-slate-500 dark:text-slate-400 uppercase">Background</Label>
                                     <div className="flex items-center gap-2">
                                         <Input
                                             type="color"
@@ -235,7 +235,7 @@ export function ProfileEditor({ initialConfig, user, projects }: ProfileEditorPr
                                     </div>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <Label className="text-xs text-slate-500 uppercase">Text Base</Label>
+                                    <Label className="text-xs text-slate-500 dark:text-slate-400 uppercase">Text Base</Label>
                                     <div className="flex items-center gap-2">
                                         <Input
                                             type="color"
@@ -251,7 +251,7 @@ export function ProfileEditor({ initialConfig, user, projects }: ProfileEditorPr
                                     </div>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <Label className="text-xs text-slate-500 uppercase">Accent / Primary</Label>
+                                    <Label className="text-xs text-slate-500 dark:text-slate-400 uppercase">Accent / Primary</Label>
                                     <div className="flex items-center gap-2">
                                         <Input
                                             type="color"
@@ -309,7 +309,7 @@ export function ProfileEditor({ initialConfig, user, projects }: ProfileEditorPr
                                 </div>
                             ))}
                         </div>
-                        <p className="text-xs text-slate-500">
+                        <p className="text-xs text-slate-500 dark:text-slate-400">
                             Reorder sections to change the layout flow.
                         </p>
                     </TabsContent>
@@ -328,7 +328,7 @@ export function ProfileEditor({ initialConfig, user, projects }: ProfileEditorPr
                                     <SelectItem value="high">High (Dynamic)</SelectItem>
                                 </SelectContent>
                             </Select>
-                            <p className="text-xs text-slate-500">
+                            <p className="text-xs text-slate-500 dark:text-slate-400">
                                 Controls how elements enter the screen.
                             </p>
                         </div>

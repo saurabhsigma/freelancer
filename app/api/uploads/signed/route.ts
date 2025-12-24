@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSignedUploadUrl } from "@/server/s3";
 import { getSession } from "@/lib/auth";
+import cloudinary from "@/lib/cloudinary";
 
 export async function POST(req: NextRequest) {
     const session = await getSession();
@@ -9,20 +9,30 @@ export async function POST(req: NextRequest) {
     }
 
     try {
-        const { filename, contentType } = await req.json();
+        const { filename } = await req.json();
 
-        // Create a unique key for the file
-        // Organize by user or project if possible, but filename is what we have here.
-        // Let's use timestamp-filename like before.
-        const key = `uploads/${Date.now()}-${filename.replace(/\s+/g, "_")}`;
+        // Create a unique public_id
+        // Using timestamp + sanitized filename
+        const timestamp = Math.round(new Date().getTime() / 1000);
+        const public_id = `freelancer_os/${timestamp}-${filename.replace(/\s+/g, "_").split('.')[0]}`;
 
-        const url = await getSignedUploadUrl(key, contentType);
-        // Construct public URL (assuming public read access)
-        const publicUrl = `https://${process.env.S3_BUCKET}.s3.${process.env.S3_REGION}.amazonaws.com/${key}`;
+        const signature = cloudinary.utils.api_sign_request({
+            timestamp,
+            public_id,
+            folder: "freelancer_os",
+        }, process.env.CLOUDINARY_API_SECRET!);
 
-        return NextResponse.json({ url, key, publicUrl });
+        return NextResponse.json({
+            signature,
+            timestamp,
+            public_id,
+            api_key: process.env.CLOUDINARY_API_KEY,
+            cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+            folder: "freelancer_os"
+        });
     } catch (error) {
-        console.error("Error generating signed URL:", error);
-        return NextResponse.json({ error: "Failed to generate upload URL" }, { status: 500 });
+        console.error("Error generating signature:", error);
+        return NextResponse.json({ error: "Failed to generate signature" }, { status: 500 });
     }
 }
+

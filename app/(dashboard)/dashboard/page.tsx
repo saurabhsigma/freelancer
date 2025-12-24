@@ -18,8 +18,8 @@ export default async function DashboardPage() {
     return (
         <div className="space-y-8">
             <div>
-                <h2 className="text-3xl font-bold tracking-tight text-slate-900">Dashboard</h2>
-                <p className="text-muted-foreground mt-1">
+                <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Dashboard</h2>
+                <p className="text-muted-foreground mt-1 dark:text-slate-400">
                     Overview of your active freelance work.
                 </p>
             </div>
@@ -99,13 +99,13 @@ export default async function DashboardPage() {
                     </CardHeader>
                     <CardContent className="space-y-2">
                         <Link href="/projects/new" className="block w-full">
-                            <button className="w-full text-left px-4 py-3 rounded-md border text-sm font-medium hover:bg-slate-50 transition-colors flex items-center justify-between">
+                            <button className="w-full text-left px-4 py-3 rounded-md border text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center justify-between dark:border-slate-800 dark:text-slate-200">
                                 Create New Project
                                 <span className="text-xl leading-none">+</span>
                             </button>
                         </Link>
                         <Link href="/clients/new" className="block w-full">
-                            <button className="w-full text-left px-4 py-3 rounded-md border text-sm font-medium hover:bg-slate-50 transition-colors flex items-center justify-between">
+                            <button className="w-full text-left px-4 py-3 rounded-md border text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center justify-between dark:border-slate-800 dark:text-slate-200">
                                 Add New Client
                                 <span className="text-xl leading-none">+</span>
                             </button>

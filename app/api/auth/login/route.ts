@@ -14,12 +14,16 @@ export async function POST(req: Request) {
         }
 
         await connectToDatabase();
+        console.log("j1");
 
         const user = await User.findOne({ email });
-        if (!user) return NextResponse.json({ error: "Invalid credentials." }, { status: 401 });
+        if (!user) return NextResponse.json({ error: "Invalid credential." }, { status: 401 });
+        console.log("hello");
+        console.log("user: ",user);
 
         const isMatch = await bcrypt.compare(password, user.passwordHash);
         if (!isMatch) return NextResponse.json({ error: "Invalid credentials." }, { status: 401 });
+        console.log("password: ",isMatch);
 
         await login({ id: user._id.toString(), email: user.email, name: user.name });
 
