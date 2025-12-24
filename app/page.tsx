@@ -1,8 +1,12 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2, Globe, Shield, Zap } from "lucide-react";
+import { NavActions } from "@/components/nav-actions";
+import { getSession } from "@/lib/auth";
 
-export default function Home() {
+export default async function Home() {
+  const session = await getSession();
+
   return (
     <div className="flex min-h-screen flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50 font-sans selection:bg-rose-500/30">
 
@@ -12,14 +16,8 @@ export default function Home() {
           <Link href="/" className="text-xl font-bold tracking-tighter bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400 bg-clip-text text-transparent">
             Freelancer.
           </Link>
-          <div className="flex items-center gap-4">
-            <Link href="/login" className="text-sm font-medium hover:text-slate-600 dark:hover:text-slate-300 transition-colors">
-              Login
-            </Link>
-            <Link href="/signup">
-              <Button size="sm" className="rounded-full px-5">Get Started</Button>
-            </Link>
-          </div>
+          <NavActions user={session?.user} />
+
         </div>
       </header>
 
@@ -36,7 +34,7 @@ export default function Home() {
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-8 bg-gradient-to-br from-slate-900 via-slate-700 to-slate-500 dark:from-white dark:via-slate-200 dark:to-slate-500 bg-clip-text text-transparent pb-2">
             Manage your freelance business <br className="hidden md:block" /> with confidence.
           </h1>
-          <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="text-xl text-slate-600 dark:text-slate-200 max-w-2xl mx-auto mb-10 leading-relaxed">
             All-in-one platform to manage clients, projects, invoices, and your public portfolio.
             Built for modern freelancers who want to look professional.
           </p>
@@ -63,7 +61,7 @@ export default function Home() {
                 <Globe className="h-6 w-6" />
               </div>
               <h3 className="text-xl font-bold mb-3">Public Portfolio</h3>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+              <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
                 Showcase your work with a stunning, SEO-optimized public profile.
                 Customizable themes and project galleries included.
               </p>
@@ -73,7 +71,7 @@ export default function Home() {
                 <Zap className="h-6 w-6" />
               </div>
               <h3 className="text-xl font-bold mb-3">Project Management</h3>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+              <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
                 Track milestones, deliverables, and deadlines.
                 Keep your clients updated with real-time progress tracking.
               </p>
@@ -83,7 +81,7 @@ export default function Home() {
                 <Shield className="h-6 w-6" />
               </div>
               <h3 className="text-xl font-bold mb-3">Secure Invoicing</h3>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+              <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
                 Create professional invoices and get paid faster.
                 Integrated with Stripe for secure, global payments.
               </p>
@@ -94,7 +92,7 @@ export default function Home() {
         {/* Social Proof / Footer CTA */}
         <section className="container mx-auto max-w-4xl px-6 text-center border-t border-slate-200 dark:border-slate-800 pt-24">
           <h2 className="text-3xl font-bold mb-6">Ready to upgrade your workflow?</h2>
-          <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-10 text-slate-500 dark:text-slate-400">
+          <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-10 text-slate-500 dark:text-slate-300">
             <div className="flex items-center gap-2">
               <CheckCircle2 className="h-5 w-5 text-green-500" /> Free Tier Available
             </div>

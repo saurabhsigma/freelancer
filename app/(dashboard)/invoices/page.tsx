@@ -34,8 +34,8 @@ export default async function InvoicesPage() {
     return (
         <div className="space-y-8">
             <div>
-                <h2 className="text-3xl font-bold tracking-tight text-slate-900">Invoices</h2>
-                <p className="text-muted-foreground mt-1">
+                <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Invoices</h2>
+                <p className="text-muted-foreground mt-1 dark:text-slate-400">
                     Track all your payments across projects.
                 </p>
             </div>
@@ -52,13 +52,13 @@ export default async function InvoicesPage() {
                                 <CardContent className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                     <div>
                                         <div className="flex items-center gap-3">
-                                            <span className="text-lg font-bold text-slate-900">{formatCurrency(invoice.amount)}</span>
+                                            <span className="text-lg font-bold text-slate-900 dark:text-slate-100">{formatCurrency(invoice.amount)}</span>
                                             <Badge variant={invoice.status === 'paid' ? 'success' : invoice.status === 'overdue' ? 'destructive' : 'secondary'}>
                                                 {invoice.status}
                                             </Badge>
                                         </div>
-                                        <div className="mt-1 text-sm text-slate-500">
-                                            <span className="font-medium text-slate-900">{invoice.projectId.title}</span>
+                                        <div className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                                            <span className="font-medium text-slate-900 dark:text-slate-200">{invoice.projectId.title}</span>
                                             {invoice.projectId.clientId && (
                                                 <span> • {invoice.projectId.clientId.name}</span>
                                             )}

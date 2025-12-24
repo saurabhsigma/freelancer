@@ -45,8 +45,8 @@ export default function SignupPage() {
     return (
         <div className="space-y-6">
             <div>
-                <h3 className="text-lg font-medium leading-6 text-gray-900">Create your account</h3>
-                <p className="mt-1 text-sm text-gray-500">
+                <h3 className="text-lg font-medium leading-6 text-slate-900 dark:text-white">Create your account</h3>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                     Start organizing your freelance work today.
                 </p>
             </div>
@@ -107,8 +107,8 @@ export default function SignupPage() {
             </form>
 
             <div className="text-center text-sm">
-                <span className="text-gray-500">Already have an account? </span>
-                <Link href="/login" className="font-medium text-slate-900 hover:text-slate-800">
+                <span className="text-slate-500 dark:text-slate-400">Already have an account? </span>
+                <Link href="/login" className="font-medium text-slate-900 hover:text-slate-800 dark:text-slate-200 dark:hover:text-white">
                     Sign in
                 </Link>
             </div>

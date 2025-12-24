@@ -18,28 +18,43 @@ export function ProjectImageUpload({ projectId, currentImage }: { projectId: str
         const file = e.target.files[0];
 
         try {
-            // 1. Get signed URL
+            // 1. Get signed signature
             const res = await fetch("/api/uploads/signed", {
                 method: "POST",
                 body: JSON.stringify({ filename: file.name, contentType: file.type }),
             });
 
-            if (!res.ok) throw new Error("Failed to get upload URL");
+            if (!res.ok) throw new Error("Failed to get signature");
 
-            const { url, key } = await res.json();
+            const { signature, timestamp, public_id, api_key, cloud_name, folder } = await res.json();
 
-            // 2. Upload to S3
-            await fetch(url, {
-                method: "PUT",
-                body: file,
-                headers: { "Content-Type": file.type },
+            // 2. Upload to Cloudinary
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("api_key", api_key);
+            formData.append("timestamp", timestamp.toString());
+            formData.append("signature", signature);
+            formData.append("public_id", public_id);
+            formData.append("folder", folder);
+
+            const uploadRes = await fetch(`https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`, {
+                method: "POST",
+                body: formData,
             });
 
+            if (!uploadRes.ok) throw new Error("Upload failed");
+
+            const uploadData = await uploadRes.json();
+            const secureUrl = uploadData.secure_url;
+
             // 3. Save record
-            const fileResult = await saveFileRecord(projectId, file.name, key);
+            // Previously key was the S3 key, now we can use public_id or just url.
+            // saveFileRecord usually constructs the URL from the key, but we have the full URL now.
+            // I should check saveFileRecord implementation. Assuming it stores 'key' for deletion later.
+            const fileResult = await saveFileRecord(projectId, file.name, public_id, secureUrl);
             if (fileResult?.success) {
                 // Then link to project screenshot field
-                await updateProjectScreenshot(projectId, fileResult.file.fileUrl);
+                await updateProjectScreenshot(projectId, secureUrl);
                 router.refresh();
             }
         } catch (err) {

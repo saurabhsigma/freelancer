@@ -44,6 +44,9 @@ export async function getProjects() {
     if (!session?.user?.id) return [];
 
     await connectToDatabase();
+    // Ensure Client model is registered prevents MissingSchemaError
+    const _client = Client; 
+    
     // Populate client for display
     const projects = await Project.find({ userId: session.user.id })
         .populate("clientId", "name")
@@ -58,6 +61,7 @@ export async function getProject(id: string) {
 
     try {
         await connectToDatabase();
+        const _client = Client; // Ensure proper registration
         const project = await Project.findOne({ _id: id, userId: session.user.id }).populate('clientId');
         if (!project) return null;
         return JSON.parse(JSON.stringify(project));

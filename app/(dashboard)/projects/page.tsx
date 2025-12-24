@@ -13,8 +13,8 @@ export default async function ProjectsPage() {
         <div className="space-y-8">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h2 className="text-3xl font-bold tracking-tight text-slate-900">Projects</h2>
-                    <p className="text-muted-foreground mt-1">
+                    <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Projects</h2>
+                    <p className="text-muted-foreground mt-1 dark:text-slate-400">
                         Track your active work and progress.
                     </p>
                 </div>
@@ -28,11 +28,11 @@ export default async function ProjectsPage() {
 
             {projects.length === 0 ? (
                 <Card className="col-span-full py-12 flex flex-col items-center justify-center text-center">
-                    <div className="rounded-full bg-slate-100 p-3 mb-4">
-                        <Plus className="h-6 w-6 text-slate-400" />
+                    <div className="rounded-full bg-slate-100 dark:bg-slate-800 p-3 mb-4">
+                        <Plus className="h-6 w-6 text-slate-400 dark:text-slate-300" />
                     </div>
-                    <h3 className="text-lg font-medium text-slate-900">No projects yet</h3>
-                    <p className="max-w-sm mt-1 text-sm text-muted-foreground mb-6">
+                    <h3 className="text-lg font-medium text-slate-900 dark:text-white">No projects yet</h3>
+                    <p className="max-w-sm mt-1 text-sm text-muted-foreground dark:text-slate-400 mb-6">
                         Create a project to start tracking milestones and files.
                     </p>
                     <Link href="/projects/new">
@@ -47,14 +47,14 @@ export default async function ProjectsPage() {
                                 <CardContent className="pt-6">
                                     <div className="flex items-start justify-between">
                                         <div>
-                                            <h3 className="font-semibold text-lg text-slate-900 group-hover:text-slate-700">{project.title}</h3>
-                                            <p className="text-sm text-slate-500 font-medium">{project.clientId?.name || "Unknown Client"}</p>
+                                            <h3 className="font-semibold text-lg text-slate-900 dark:text-white group-hover:text-slate-700 dark:group-hover:text-slate-200">{project.title}</h3>
+                                            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">{project.clientId?.name || "Unknown Client"}</p>
                                         </div>
                                         <Badge variant={project.status === "active" ? "default" : project.status === "completed" ? "success" : "secondary"}>
                                             {project.status}
                                         </Badge>
                                     </div>
-                                    <div className="mt-6 flex items-center gap-6 text-sm text-muted-foreground">
+                                    <div className="mt-6 flex items-center gap-6 text-sm text-muted-foreground dark:text-slate-400">
                                         {project.dueDate && (
                                             <div className="flex items-center gap-2">
                                                 <Calendar className="h-4 w-4" />

@@ -3,7 +3,7 @@ import { Topbar } from "@/components/features/topbar";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     return (
-        <div className="flex h-screen bg-slate-50 overflow-hidden">
+        <div className="flex h-screen bg-slate-50 dark:bg-slate-950 overflow-hidden transition-colors duration-300">
             <div className="hidden md:flex md:w-64 md:flex-col fixed inset-y-0 text-white transition-all duration-300">
                 <Sidebar />
             </div>
