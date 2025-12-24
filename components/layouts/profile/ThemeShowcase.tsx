@@ -32,9 +32,11 @@ export function ThemeShowcase({ user, projects, config }: ThemeProps) {
                             </h1>
 
                             <div className="flex items-center gap-3">
-                                <Link href={`mailto:${user.email}`} className="no-underline">
-                                    <Button size="lg" className="bg-slate-900 text-white px-6">Hire me</Button>
-                                </Link>
+                                {config.cta?.label && (
+                                    <Link href={config.cta?.link || `mailto:${user.email}`} className="no-underline">
+                                        <Button size="lg" className={config.cta?.style === 'outline' ? 'bg-transparent border' : config.cta?.style === 'ghost' ? 'bg-transparent' : 'bg-slate-900 text-white px-6'}>{config.cta.label}</Button>
+                                    </Link>
+                                )}
                                 <Link href={user.socials?.github || '#'} target="_blank">
                                     <Button variant="outline" className="gap-2">{user.socials?.github ? <Github className="w-4 h-4" /> : <Globe className="w-4 h-4" />} View work</Button>
                                 </Link>

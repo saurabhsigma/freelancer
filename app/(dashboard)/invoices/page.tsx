@@ -1,6 +1,9 @@
 import { getSession } from "@/lib/auth";
 import connectToDatabase from "@/lib/db";
 import { Invoice } from "@/models/Invoice";
+// Ensure related models are registered with mongoose before populating refs
+import "@/models/Project";
+import "@/models/Client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency, formatDate } from "@/lib/utils";

@@ -1,9 +1,8 @@
-import { ThemeMinimal } from "@/components/layouts/profile/ThemeMinimal";
-import { ThemeBold } from "@/components/layouts/profile/ThemeBold";
-import { ThemeProfessional } from "@/components/layouts/profile/ThemeProfessional";
-import { ThemeGrid } from "@/components/layouts/profile/ThemeGrid";
-import { ThemeClassic } from "@/components/layouts/profile/ThemeClassic";
-import { ThemeShowcase } from "@/components/layouts/profile/ThemeShowcase";
+import { ThemePremium } from "@/components/layouts/profile/ThemePremium";
+import { ThemeModern } from "@/components/layouts/profile/ThemeModern";
+import { ThemeCreative } from "@/components/layouts/profile/ThemeCreative";
+import { ThemeDev } from "@/components/layouts/profile/ThemeDev";
+import { ThemeZen } from "@/components/layouts/profile/ThemeZen";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Settings } from "lucide-react";
@@ -28,26 +27,26 @@ export function ProfileView({ user, projects, isOwner }: { user: any; projects: 
 
     const renderTheme = () => {
         switch (theme) {
-            case "bold":
-                return <ThemeBold user={user} projects={projects} config={config} />;
-            case "professional":
-                return <ThemeProfessional user={user} projects={projects} config={config} />;
-            case "showcase":
-                return <ThemeShowcase user={user} projects={projects} config={config} />;
-            case "classic":
-                return <ThemeClassic user={user} projects={projects} config={config} />;
-            case "grid":
-                return <ThemeGrid user={user} projects={projects} config={config} />;
-            case "minimal":
+            case "modern":
+                return <ThemeModern user={user} projects={projects} config={config} />;
+            case "creative":
+                return <ThemeCreative user={user} projects={projects} config={config} />;
+            case "dev":
+                return <ThemeDev user={user} projects={projects} config={config} />;
+            case "zen":
+                return <ThemeZen user={user} projects={projects} config={config} />;
+            case "premium":
             default:
-                return <ThemeMinimal user={user} projects={projects} config={config} />;
+                return <ThemePremium user={user} projects={projects} config={config} />;
         }
     };
 
     return (
-        <>
-            {renderTheme()}
+        <div className={config.colorMode === "dark" ? "dark" : ""}>
+            <div className="bg-background text-foreground min-h-screen transition-colors duration-300">
+                {renderTheme()}
+            </div>
             <EditOverlay />
-        </>
+        </div>
     );
 }

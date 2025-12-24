@@ -7,14 +7,14 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { updateProfileConfig, ProfileConfig } from "@/server/actions/profile-config";
 import { Card } from "@/components/ui/card";
-import { Check, ArrowUp, ArrowDown, Eye, EyeOff, LayoutTemplate, Palette, Type, MonitorPlay, Save } from "lucide-react";
+import { Check, ArrowUp, ArrowDown, Eye, EyeOff, LayoutTemplate, Palette, Type, MonitorPlay, Save, Smartphone, Laptop } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { ThemeMinimal } from "@/components/layouts/profile/ThemeMinimal";
-import { ThemeBold } from "@/components/layouts/profile/ThemeBold";
-import { ThemeProfessional } from "@/components/layouts/profile/ThemeProfessional";
-import { ThemeGrid } from "@/components/layouts/profile/ThemeGrid";
-import { ThemeClassic } from "@/components/layouts/profile/ThemeClassic";
+import { ThemePremium } from "@/components/layouts/profile/ThemePremium";
+import { ThemeModern } from "@/components/layouts/profile/ThemeModern";
+import { ThemeCreative } from "@/components/layouts/profile/ThemeCreative";
+import { ThemeDev } from "@/components/layouts/profile/ThemeDev";
+import { ThemeZen } from "@/components/layouts/profile/ThemeZen";
 import { useToast } from "@/components/ui/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -44,11 +44,14 @@ export function ProfileEditor({ initialConfig, user, projects }: ProfileEditorPr
             text: "#0f172a",
             accent: "#2563eb"
         },
+        heroBackground: initialConfig?.heroBackground || '',
+        cta: initialConfig?.cta || { label: 'Hire me', style: 'solid', link: '' },
         sections: initialConfig?.sections?.length ? initialConfig.sections : defaultSections,
         customDomain: initialConfig?.customDomain
     });
 
     const [saving, setSaving] = useState(false);
+    const [viewMode, setViewMode] = useState<"desktop" | "mobile">("desktop");
     const router = useRouter();
     const { toast } = useToast();
 
@@ -64,12 +67,11 @@ export function ProfileEditor({ initialConfig, user, projects }: ProfileEditorPr
     }, [initialConfig]);
 
     const themes = [
-        { id: "minimal", name: "Minimal", description: "Clean, whitespace-heavy layout focus on typography." },
-        { id: "showcase", name: "Showcase", description: "Big hero, gradient background and project-focused layout." },
-        { id: "classic", name: "Classic Portfolio", description: "The original timeless look with dark mode toggle." },
-        { id: "bold", name: "Bold", description: "High contrast, large type, dark mode default." },
-        { id: "professional", name: "Professional", description: "Standard resume/portfolio layout with sidebar." },
-        { id: "grid", name: "Creative Grid", description: "Masonry style grid for visual portfolios." },
+        { id: "premium", name: "Premium ✨", description: "Glassmorphism, animations, and high-end aesthetics." },
+        { id: "modern", name: "Modern ✦", description: "Linear-style. Bento grids, clean lines, subtle glows." },
+        { id: "creative", name: "Creative 🎨", description: "Bold typography, sticky scrolling, vibrant." },
+        { id: "dev", name: "Dev / Terminal 👨‍💻", description: "Monospace, neon accents, cyber aesthetic." },
+        { id: "zen", name: "Zen 🍵", description: "Editorial style. Serif fonts, paper texture, minimal." },
     ];
 
     const handleSave = async () => {
@@ -158,6 +160,31 @@ export function ProfileEditor({ initialConfig, user, projects }: ProfileEditorPr
                                     <p className="text-xs text-slate-500 mt-1">{theme.description}</p>
                                 </Card>
                             ))}
+                        </div>
+                        {/* Hero & CTA picker for Showcase */}
+                        <div className="mt-4">
+                            <Label className="text-sm font-medium">Hero Background (URL or color)</Label>
+                            <Input
+                                placeholder="e.g. /uploads/hero.jpg or #0ea5e9"
+                                value={config.heroBackground || ''}
+                                onChange={(e) => setConfig({ ...config, heroBackground: e.target.value })}
+                                className="mt-2"
+                            />
+
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mt-3">
+                                <Input value={config.cta?.label || ''} onChange={(e) => setConfig({ ...config, cta: { ...config.cta, label: e.target.value } })} placeholder="CTA label" />
+                                <Input value={config.cta?.link || ''} onChange={(e) => setConfig({ ...config, cta: { ...config.cta, link: e.target.value } })} placeholder="CTA link (mailto: or /contact)" />
+                                <Select value={config.cta?.style || 'solid'} onValueChange={(v) => setConfig({ ...config, cta: { ...config.cta, style: v } })}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Style" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="solid">Solid</SelectItem>
+                                        <SelectItem value="outline">Outline</SelectItem>
+                                        <SelectItem value="ghost">Ghost</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
                         </div>
                     </TabsContent>
 
@@ -310,24 +337,63 @@ export function ProfileEditor({ initialConfig, user, projects }: ProfileEditorPr
             </div>
 
             {/* Live Preview Area */}
-            <div className="hidden xl:flex flex-1 bg-slate-100 dark:bg-black/50 rounded-xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800 relative">
-                <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-black/80 text-white text-xs px-3 py-1 rounded-full backdrop-blur-md z-50">
-                    Live Preview
+            <div className="hidden xl:flex flex-1 flex-col bg-slate-100 dark:bg-zinc-950 rounded-xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800 relative transition-all duration-300">
+                {/* Preview Toolbar */}
+                <div className="h-12 bg-white dark:bg-zinc-900 border-b dark:border-zinc-800 flex items-center justify-between px-4 z-20">
+                    <div className="flex items-center gap-2">
+                        <div className="flex gap-2 bg-slate-100 dark:bg-zinc-800 p-1 rounded-lg">
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setViewMode("desktop")}
+                                className={cn("h-7 px-2 hover:bg-white dark:hover:bg-zinc-700", viewMode === "desktop" && "bg-white dark:bg-zinc-700 shadow-sm")}
+                            >
+                                <Laptop className="w-4 h-4" />
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setViewMode("mobile")}
+                                className={cn("h-7 px-2 hover:bg-white dark:hover:bg-zinc-700", viewMode === "mobile" && "bg-white dark:bg-zinc-700 shadow-sm")}
+                            >
+                                <Smartphone className="w-4 h-4" />
+                            </Button>
+                        </div>
+                        <span className="text-xs text-slate-500 font-medium">Live Preview</span>
+                    </div>
+                    <div className="bg-green-500/10 text-green-600 dark:text-green-400 text-[10px] px-2 py-0.5 rounded-full border border-green-500/20 font-medium flex items-center gap-1.5">
+                        <span className="relative flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                        </span>
+                        Auto-updating
+                    </div>
                 </div>
-                <div className="w-full h-full overflow-y-auto custom-scrollbar bg-white dark:bg-slate-950">
-                    {/* Pass live config to themes */}
-                    <div className={cn(
-                        "min-h-full",
-                        config.colorMode === 'dark' ? 'dark' : config.colorMode === 'light' ? '' : 'system', // naive toggle, actual provider needed for real mode switch
-                        // If we want real dark mode preview, we might need a wrapper div with 'dark' class if mode is dark
-                    )}>
-                        {/* We mimic the ProfileView logic here but with passed config */}
 
-                        {config.theme === 'bold' && <ThemeBold user={user} projects={projects} config={config} />}
-                        {config.theme === 'professional' && <ThemeProfessional user={user} projects={projects} config={config} />}
-                        {config.theme === 'classic' && <ThemeClassic user={user} projects={projects} config={config} />}
-                        {config.theme === 'minimal' && <ThemeMinimal user={user} projects={projects} config={config} />}
-                        {config.theme === 'grid' && <ThemeGrid user={user} projects={projects} config={config} />}
+                {/* Preview Viewport */}
+                <div className="flex-1 overflow-hidden bg-slate-200/50 dark:bg-zinc-950/50 grid place-items-center relative">
+                    <div
+                        className={cn(
+                            "transition-all duration-500 ease-in-out shadow-2xl overflow-y-auto custom-scrollbar relative",
+                            viewMode === "mobile" ? "w-[375px] h-[812px] rounded-[3rem] border-[8px] border-zinc-900 bg-black" : "w-full h-full rounded-none border-0",
+                            // Ensure the preview content has the correct theme context
+                            config.colorMode === 'dark' ? 'dark' : config.colorMode === 'light' ? '' : 'system'
+                        )}
+                        style={viewMode === 'mobile' ? { boxShadow: '0 0 0 2px #333' } : {}}
+                    >
+                        {/* Mobile Notch */}
+                        {viewMode === 'mobile' && (
+                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120px] h-[30px] bg-zinc-900 rounded-b-2xl z-50 pointer-events-none" />
+                        )}
+
+                        {/* Content Wrapper - Applies theme variables correctly */}
+                        <div className="min-h-full bg-background text-foreground animate-in fade-in duration-300">
+                            {config.theme === 'premium' && <ThemePremium user={user} projects={projects} config={config} />}
+                            {config.theme === 'modern' && <ThemeModern user={user} projects={projects} config={config} />}
+                            {config.theme === 'creative' && <ThemeCreative user={user} projects={projects} config={config} />}
+                            {config.theme === 'dev' && <ThemeDev user={user} projects={projects} config={config} />}
+                            {config.theme === 'zen' && <ThemeZen user={user} projects={projects} config={config} />}
+                        </div>
                     </div>
                 </div>
             </div>

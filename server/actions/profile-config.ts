@@ -16,6 +16,12 @@ export interface ProfileConfig {
         text?: string;
         accent?: string;
     };
+    heroBackground?: string;
+    cta?: {
+        label?: string;
+        style?: string;
+        link?: string;
+    };
     sections: {
         id: string;
         type: string;
@@ -50,6 +56,14 @@ export async function updateProfileConfig(config: Partial<ProfileConfig>) {
             if (config.customColors.background) updateFiles["profileConfig.customColors.background"] = config.customColors.background;
             if (config.customColors.text) updateFiles["profileConfig.customColors.text"] = config.customColors.text;
             if (config.customColors.accent) updateFiles["profileConfig.customColors.accent"] = config.customColors.accent;
+        }
+
+        if (config.heroBackground) updateFiles["profileConfig.heroBackground"] = config.heroBackground;
+
+        if (config.cta) {
+            if (config.cta.label) updateFiles["profileConfig.cta.label"] = config.cta.label;
+            if (config.cta.style) updateFiles["profileConfig.cta.style"] = config.cta.style;
+            if (config.cta.link) updateFiles["profileConfig.cta.link"] = config.cta.link;
         }
 
         if (config.sections) {
