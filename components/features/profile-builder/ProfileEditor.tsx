@@ -15,6 +15,7 @@ import { ThemeModern } from "@/components/layouts/profile/ThemeModern";
 import { ThemeCreative } from "@/components/layouts/profile/ThemeCreative";
 import { ThemeDev } from "@/components/layouts/profile/ThemeDev";
 import { ThemeZen } from "@/components/layouts/profile/ThemeZen";
+import { ThemeEditable } from "@/components/layouts/profile/ThemeEditable";
 import { useToast } from "@/components/ui/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -72,6 +73,7 @@ export function ProfileEditor({ initialConfig, user, projects }: ProfileEditorPr
         { id: "creative", name: "Creative 🎨", description: "Bold typography, sticky scrolling, vibrant." },
         { id: "dev", name: "Dev / Terminal 👨‍💻", description: "Monospace, neon accents, cyber aesthetic." },
         { id: "zen", name: "Zen 🍵", description: "Editorial style. Serif fonts, paper texture, minimal." },
+        { id: "editable", name: "Editable (Live)", description: "A live editable preview with inline controls." }
     ];
 
     const handleSave = async () => {
@@ -393,6 +395,7 @@ export function ProfileEditor({ initialConfig, user, projects }: ProfileEditorPr
                             {config.theme === 'creative' && <ThemeCreative user={user} projects={projects} config={config} />}
                             {config.theme === 'dev' && <ThemeDev user={user} projects={projects} config={config} />}
                             {config.theme === 'zen' && <ThemeZen user={user} projects={projects} config={config} />}
+                            {config.theme === 'editable' && <ThemeEditable user={user} projects={projects} config={config} />}
                         </div>
                     </div>
                 </div>

@@ -3,6 +3,7 @@ import { ThemeModern } from "@/components/layouts/profile/ThemeModern";
 import { ThemeCreative } from "@/components/layouts/profile/ThemeCreative";
 import { ThemeDev } from "@/components/layouts/profile/ThemeDev";
 import { ThemeZen } from "@/components/layouts/profile/ThemeZen";
+import { ThemeEditable } from "@/components/layouts/profile/ThemeEditable";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Settings } from "lucide-react";
@@ -33,6 +34,8 @@ export function ProfileView({ user, projects, isOwner }: { user: any; projects: 
                 return <ThemeCreative user={user} projects={projects} config={config} />;
             case "dev":
                 return <ThemeDev user={user} projects={projects} config={config} />;
+                case "editable":
+                    return <ThemeEditable user={user} projects={projects} config={config} />;
             case "zen":
                 return <ThemeZen user={user} projects={projects} config={config} />;
             case "premium":
