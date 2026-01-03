@@ -7,7 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata = {
-  title: "Freelancer OS",
+  title: "Flanca",
   description: "The second brain for high-performance freelancers.",
 };
 
