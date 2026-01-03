@@ -1,9 +1,9 @@
-
 import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import SettingsForm from "@/components/features/settings-form";
 import connectToDatabase from "@/lib/db";
 import { User } from "@/models/User";
+import { Project } from "@/models/Project";
 
 export default async function SettingsGeneralPage() {
     const session = await getSession();
@@ -16,13 +16,16 @@ export default async function SettingsGeneralPage() {
         return <div>User not found.</div>;
     }
 
+    const projects = await Project.find({ userId: session.user.id }).lean();
+
     const userJson = JSON.parse(JSON.stringify(user));
+    const projectsJson = JSON.parse(JSON.stringify(projects));
 
     return (
-        <div className="max-w-4xl space-y-6">
-            <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">General Account</h2>
+        <div className="max-w-[1800px] space-y-6 px-4">
+            <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">General Account & Resume</h2>
             <div className="bg-white dark:bg-slate-900 rounded-lg p-6 border border-slate-200 dark:border-slate-800">
-                <SettingsForm user={userJson} />
+                <SettingsForm user={userJson} projects={projectsJson} />
             </div>
         </div>
     );

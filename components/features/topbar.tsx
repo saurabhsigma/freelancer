@@ -1,5 +1,7 @@
 import { getSession } from "@/lib/auth";
 import { ThemeToggle } from "@/components/theme-toggle";
+import Link from "next/link";
+import { ExternalLink } from "lucide-react";
 
 export async function Topbar() {
     const session = await getSession();
@@ -12,6 +14,17 @@ export async function Topbar() {
                 Workspace
             </h1>
             <div className="flex items-center gap-4">
+                {/* View Public Profile Button */}
+                {session?.user?.username && (
+                    <Link
+                        href={`/profile/${session.user.username}`}
+                        target="_blank"
+                        className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-800 dark:text-slate-50 h-9 px-3 hidden md:flex gap-2 mr-4"
+                    >
+                        View Public Profile <ExternalLink size={14} />
+                    </Link>
+                )}
+
                 <ThemeToggle />
                 <div className="flex items-center gap-2">
                     <div className="h-8 w-8 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 font-medium transition-colors">

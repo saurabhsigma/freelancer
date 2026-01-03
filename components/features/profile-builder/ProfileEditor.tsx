@@ -15,7 +15,7 @@ import { ThemeModern } from "@/components/layouts/profile/ThemeModern";
 import { ThemeCreative } from "@/components/layouts/profile/ThemeCreative";
 import { ThemeDev } from "@/components/layouts/profile/ThemeDev";
 import { ThemeZen } from "@/components/layouts/profile/ThemeZen";
-import { ThemeEditable } from "@/components/layouts/profile/ThemeEditable";
+
 import { useToast } from "@/components/ui/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -72,8 +72,7 @@ export function ProfileEditor({ initialConfig, user, projects }: ProfileEditorPr
         { id: "modern", name: "Modern ✦", description: "Linear-style. Bento grids, clean lines, subtle glows." },
         { id: "creative", name: "Creative 🎨", description: "Bold typography, sticky scrolling, vibrant." },
         { id: "dev", name: "Dev / Terminal 👨‍💻", description: "Monospace, neon accents, cyber aesthetic." },
-        { id: "zen", name: "Zen 🍵", description: "Editorial style. Serif fonts, paper texture, minimal." },
-        { id: "editable", name: "Editable (Live)", description: "A live editable preview with inline controls." }
+        { id: "zen", name: "Zen 🍵", description: "Editorial style. Serif fonts, paper texture, minimal." }
     ];
 
     const handleSave = async () => {
@@ -138,7 +137,7 @@ export function ProfileEditor({ initialConfig, user, projects }: ProfileEditorPr
                         <TabsTrigger value="theme"><LayoutTemplate className="w-4 h-4" /></TabsTrigger>
                         <TabsTrigger value="style"><Palette className="w-4 h-4" /></TabsTrigger>
                         <TabsTrigger value="content"><Type className="w-4 h-4" /></TabsTrigger>
-                        <TabsTrigger value="fx"><MonitorPlay className="w-4 h-4" /></TabsTrigger>
+
                     </TabsList>
 
                     {/* Theme Tab */}
@@ -165,13 +164,6 @@ export function ProfileEditor({ initialConfig, user, projects }: ProfileEditorPr
                         </div>
                         {/* Hero & CTA picker for Showcase */}
                         <div className="mt-4">
-                            <Label className="text-sm font-medium">Hero Background (URL or color)</Label>
-                            <Input
-                                placeholder="e.g. /uploads/hero.jpg or #0ea5e9"
-                                value={config.heroBackground || ''}
-                                onChange={(e) => setConfig({ ...config, heroBackground: e.target.value })}
-                                className="mt-2"
-                            />
 
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mt-3">
                                 <Input value={config.cta?.label || ''} onChange={(e) => setConfig({ ...config, cta: { ...config.cta, label: e.target.value } })} placeholder="CTA label" />
@@ -217,59 +209,7 @@ export function ProfileEditor({ initialConfig, user, projects }: ProfileEditorPr
                             </Select>
                         </div>
 
-                        <div className="space-y-4 pt-4 border-t">
-                            <Label className="text-base font-semibold">Custom Colors</Label>
-                            <div className="grid grid-cols-1 gap-4">
-                                <div className="flex items-center justify-between">
-                                    <Label className="text-xs text-slate-500 dark:text-slate-400 uppercase">Background</Label>
-                                    <div className="flex items-center gap-2">
-                                        <Input
-                                            type="color"
-                                            value={config.customColors?.background || "#ffffff"}
-                                            onChange={(e) => updateCustomColor('background', e.target.value)}
-                                            className="w-10 h-10 p-1 rounded-md cursor-pointer"
-                                        />
-                                        <Input
-                                            value={config.customColors?.background || "#ffffff"}
-                                            onChange={(e) => updateCustomColor('background', e.target.value)}
-                                            className="w-24 h-8 text-xs font-mono"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                    <Label className="text-xs text-slate-500 dark:text-slate-400 uppercase">Text Base</Label>
-                                    <div className="flex items-center gap-2">
-                                        <Input
-                                            type="color"
-                                            value={config.customColors?.text || "#0f172a"}
-                                            onChange={(e) => updateCustomColor('text', e.target.value)}
-                                            className="w-10 h-10 p-1 rounded-md cursor-pointer"
-                                        />
-                                        <Input
-                                            value={config.customColors?.text || "#0f172a"}
-                                            onChange={(e) => updateCustomColor('text', e.target.value)}
-                                            className="w-24 h-8 text-xs font-mono"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                    <Label className="text-xs text-slate-500 dark:text-slate-400 uppercase">Accent / Primary</Label>
-                                    <div className="flex items-center gap-2">
-                                        <Input
-                                            type="color"
-                                            value={config.customColors?.accent || "#2563eb"}
-                                            onChange={(e) => updateCustomColor('accent', e.target.value)}
-                                            className="w-10 h-10 p-1 rounded-md cursor-pointer"
-                                        />
-                                        <Input
-                                            value={config.customColors?.accent || "#2563eb"}
-                                            onChange={(e) => updateCustomColor('accent', e.target.value)}
-                                            className="w-24 h-8 text-xs font-mono"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
                     </TabsContent>
 
                     {/* Content Tab (Sections) */}
@@ -316,25 +256,7 @@ export function ProfileEditor({ initialConfig, user, projects }: ProfileEditorPr
                         </p>
                     </TabsContent>
 
-                    {/* FX Tab */}
-                    <TabsContent value="fx" className="space-y-6 mt-4">
-                        <div className="space-y-4">
-                            <Label>Animation Intensity</Label>
-                            <Select value={config.animationIntensity} onValueChange={(v) => setConfig({ ...config, animationIntensity: v })}>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select Intensity" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="low">Low (Professional)</SelectItem>
-                                    <SelectItem value="medium">Medium (Standard)</SelectItem>
-                                    <SelectItem value="high">High (Dynamic)</SelectItem>
-                                </SelectContent>
-                            </Select>
-                            <p className="text-xs text-slate-500 dark:text-slate-400">
-                                Controls how elements enter the screen.
-                            </p>
-                        </div>
-                    </TabsContent>
+
                 </Tabs>
             </div>
 
@@ -376,7 +298,7 @@ export function ProfileEditor({ initialConfig, user, projects }: ProfileEditorPr
                 <div className="flex-1 overflow-hidden bg-slate-200/50 dark:bg-zinc-950/50 grid place-items-center relative">
                     <div
                         className={cn(
-                            "transition-all duration-500 ease-in-out shadow-2xl overflow-y-auto custom-scrollbar relative",
+                            "transition-all duration-500 ease-in-out shadow-2xl overflow-y-auto overflow-x-hidden custom-scrollbar relative",
                             viewMode === "mobile" ? "w-[375px] h-[812px] rounded-[3rem] border-[8px] border-zinc-900 bg-black" : "w-full h-full rounded-none border-0",
                             // Ensure the preview content has the correct theme context
                             config.colorMode === 'dark' ? 'dark' : config.colorMode === 'light' ? '' : 'system'
@@ -395,7 +317,6 @@ export function ProfileEditor({ initialConfig, user, projects }: ProfileEditorPr
                             {config.theme === 'creative' && <ThemeCreative user={user} projects={projects} config={config} />}
                             {config.theme === 'dev' && <ThemeDev user={user} projects={projects} config={config} />}
                             {config.theme === 'zen' && <ThemeZen user={user} projects={projects} config={config} />}
-                            {config.theme === 'editable' && <ThemeEditable user={user} projects={projects} config={config} />}
                         </div>
                     </div>
                 </div>
