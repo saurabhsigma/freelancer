@@ -347,6 +347,133 @@ export function ThemeModern({ user, projects, config }: ThemeProps) {
                             </p>
                         </div>
                     </motion.section>
+
+                    {/* Experience Section */}
+                    {(
+                        (config.showExperience && user.experience?.length > 0) ||
+                        (config.showEducation && user.education?.length > 0) ||
+                        (config.showCertifications && user.certifications?.length > 0)
+                    ) && (
+                        <motion.section 
+                            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+                            className="pt-20 border-t border-zinc-500/10"
+                        >
+                            <h3 className="text-xs font-bold uppercase tracking-[0.3em] opacity-30 mb-12 flex items-center gap-2">
+                                <Plus size={14} /> Professional
+                            </h3>
+                            
+                            <div className="grid md:grid-cols-3 gap-12">
+                                {/* Experience */}
+                                {config.showExperience && user.experience?.length > 0 && (
+                                    <div className="space-y-6">
+                                        <h4 className="text-sm font-semibold opacity-70 uppercase tracking-wider">Experience</h4>
+                                        <div className="space-y-6">
+                                            {user.experience.map((exp: any, i: number) => (
+                                                <div key={i} className="space-y-2">
+                                                    <div className="flex items-start gap-3">
+                                                        <div className="mt-1.5 w-2 h-2 rounded-full bg-blue-500/60 flex-shrink-0" />
+                                                        <div className="flex-1">
+                                                            <h5 className="font-medium text-sm">{exp.title}</h5>
+                                                            <p className="text-xs opacity-50 mt-0.5">{exp.company}</p>
+                                                            <p className="text-xs opacity-40 mt-1">
+                                                                {exp.startDate ? new Date(exp.startDate).getFullYear() : ''}{" "}
+                                                                {exp.current ? "— Present" : exp.endDate ? `— ${new Date(exp.endDate).getFullYear()}` : ""}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Education */}
+                                {config.showEducation && user.education?.length > 0 && (
+                                    <div className="space-y-6">
+                                        <h4 className="text-sm font-semibold opacity-70 uppercase tracking-wider">Education</h4>
+                                        <div className="space-y-6">
+                                            {user.education.map((edu: any, i: number) => (
+                                                <div key={i} className="space-y-2">
+                                                    <div className="flex items-start gap-3">
+                                                        <div className="mt-1.5 w-2 h-2 rounded-full bg-emerald-500/60 flex-shrink-0" />
+                                                        <div className="flex-1">
+                                                            <h5 className="font-medium text-sm">{edu.degree} {edu.field && `in ${edu.field}`}</h5>
+                                                            <p className="text-xs opacity-50 mt-0.5">{edu.school}</p>
+                                                            <p className="text-xs opacity-40 mt-1">{edu.graduationYear}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Certifications */}
+                                {config.showCertifications && user.certifications?.length > 0 && (
+                                    <div className="space-y-6">
+                                        <h4 className="text-sm font-semibold opacity-70 uppercase tracking-wider">Certifications</h4>
+                                        <div className="space-y-6">
+                                            {user.certifications.map((cert: any, i: number) => (
+                                                <div key={i} className="space-y-2">
+                                                    <div className="flex items-start gap-3">
+                                                        <div className="mt-1.5 w-2 h-2 rounded-full bg-amber-500/60 flex-shrink-0" />
+                                                        <div className="flex-1">
+                                                            <h5 className="font-medium text-sm">{cert.name}</h5>
+                                                            <p className="text-xs opacity-50 mt-0.5">{cert.issuer}</p>
+                                                            {cert.credentialUrl && (
+                                                                <a href={cert.credentialUrl} className="text-xs opacity-40 hover:opacity-100 transition-opacity mt-1 inline-block">View Credential →</a>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </motion.section>
+                    )}
+
+                    {/* Services & Rates Section */}
+                    {((config.showServices && user.services?.length > 0) || (config.showHourlyRate && user.hourlyRate)) && (
+                        <motion.section 
+                            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+                            className="pt-20 border-t border-zinc-500/10 grid md:grid-cols-2 gap-20"
+                        >
+                            {config.showHourlyRate && user.hourlyRate && (
+                                <div>
+                                    <h3 className="text-xs font-bold uppercase tracking-[0.3em] opacity-30 mb-6 flex items-center gap-2">
+                                        <Plus size={14} /> Rates
+                                    </h3>
+                                    <div className="flex items-baseline gap-2">
+                                        <span className="text-4xl font-bold">${user.hourlyRate}</span>
+                                        <span className="text-sm opacity-50">/hour</span>
+                                    </div>
+                                    <p className="text-xs opacity-40 mt-4">Status: {user.availability?.status || 'available'}</p>
+                                </div>
+                            )}
+
+                            {config.showServices && user.services?.length > 0 && (
+                                <div>
+                                    <h3 className="text-xs font-bold uppercase tracking-[0.3em] opacity-30 mb-8 flex items-center gap-2">
+                                        <Plus size={14} /> Services
+                                    </h3>
+                                    <div className="space-y-4">
+                                        {user.services.map((service: any, i: number) => (
+                                            <div key={i} className="border border-zinc-500/10 rounded-xl p-4 hover:border-zinc-500/30 transition-all">
+                                                <h4 className="font-medium text-sm">{service.name}</h4>
+                                                <p className="text-xs opacity-50 mt-1">{service.description}</p>
+                                                {service.price && (
+                                                    <p className="text-xs font-semibold mt-2 opacity-70">${service.price}</p>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </motion.section>
+                    )}
+
                 </motion.main>
 
                 <footer className="mt-40 pb-12 flex flex-col md:flex-row justify-between items-center gap-8 border-t border-zinc-500/10 pt-12">

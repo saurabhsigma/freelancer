@@ -20,6 +20,16 @@ export async function updateProfile(data: {
         github?: string;
         website?: string;
     };
+    experience?: any[];
+    education?: any[];
+    certifications?: any[];
+    services?: any[];
+    hourlyRate?: number;
+    availability?: {
+        status?: string;
+        hoursPerWeek?: number;
+        timezone?: string;
+    };
 }) {
     const session = await getSession();
     if (!session?.user?.id) return { error: "Unauthorized" };
@@ -40,6 +50,12 @@ export async function updateProfile(data: {
         if (data.image) update.image = data.image; // Handle image update
         if (data.skills) update.skills = data.skills;
         if (data.socials) update.socials = data.socials;
+        if (data.experience) update.experience = data.experience;
+        if (data.education) update.education = data.education;
+        if (data.certifications) update.certifications = data.certifications;
+        if (data.services) update.services = data.services;
+        if (data.hourlyRate !== undefined) update.hourlyRate = data.hourlyRate;
+        if (data.availability) update.availability = data.availability;
 
         await User.findByIdAndUpdate(session.user.id, update);
         revalidatePath("/settings");

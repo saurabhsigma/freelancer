@@ -28,6 +28,11 @@ export interface ProfileConfig {
         visible: boolean;
         order: number;
     }[];
+   showExperience?: boolean;
+   showEducation?: boolean;
+   showCertifications?: boolean;
+   showServices?: boolean;
+   showHourlyRate?: boolean;
     customDomain?: string;
 }
 
@@ -69,6 +74,11 @@ export async function updateProfileConfig(config: Partial<ProfileConfig>) {
         if (config.sections) {
             updateFiles["profileConfig.sections"] = config.sections;
         }
+           if (config.showExperience !== undefined) updateFiles["profileConfig.showExperience"] = config.showExperience;
+           if (config.showEducation !== undefined) updateFiles["profileConfig.showEducation"] = config.showEducation;
+           if (config.showCertifications !== undefined) updateFiles["profileConfig.showCertifications"] = config.showCertifications;
+           if (config.showServices !== undefined) updateFiles["profileConfig.showServices"] = config.showServices;
+           if (config.showHourlyRate !== undefined) updateFiles["profileConfig.showHourlyRate"] = config.showHourlyRate;
 
         console.log("Executing Update:", updateFiles);
 

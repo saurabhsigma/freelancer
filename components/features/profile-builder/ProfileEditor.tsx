@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { updateProfileConfig, ProfileConfig } from "@/server/actions/profile-config";
 import { Card } from "@/components/ui/card";
-import { Check, ArrowUp, ArrowDown, Eye, EyeOff, LayoutTemplate, Palette, Type, MonitorPlay, Save, Smartphone, Laptop } from "lucide-react";
+import { Check, ArrowUp, ArrowDown, Eye, EyeOff, LayoutTemplate, Palette, Type, MonitorPlay, Save, Smartphone, Laptop, Briefcase } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { ThemePremium } from "@/components/layouts/profile/ThemePremium";
@@ -15,7 +15,6 @@ import { ThemeModern } from "@/components/layouts/profile/ThemeModern";
 import { ThemeCreative } from "@/components/layouts/profile/ThemeCreative";
 import { ThemeDev } from "@/components/layouts/profile/ThemeDev";
 import { ThemeZen } from "@/components/layouts/profile/ThemeZen";
-import { ThemeEditable } from "@/components/layouts/profile/ThemeEditable";
 import { useToast } from "@/components/ui/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -48,6 +47,11 @@ export function ProfileEditor({ initialConfig, user, projects }: ProfileEditorPr
         heroBackground: initialConfig?.heroBackground || '',
         cta: initialConfig?.cta || { label: 'Hire me', style: 'solid', link: '' },
         sections: initialConfig?.sections?.length ? initialConfig.sections : defaultSections,
+           showExperience: initialConfig?.showExperience !== undefined ? initialConfig.showExperience : true,
+           showEducation: initialConfig?.showEducation !== undefined ? initialConfig.showEducation : true,
+           showCertifications: initialConfig?.showCertifications !== undefined ? initialConfig.showCertifications : true,
+           showServices: initialConfig?.showServices !== undefined ? initialConfig.showServices : false,
+           showHourlyRate: initialConfig?.showHourlyRate !== undefined ? initialConfig.showHourlyRate : false,
         customDomain: initialConfig?.customDomain
     });
 
@@ -62,7 +66,12 @@ export function ProfileEditor({ initialConfig, user, projects }: ProfileEditorPr
             setConfig(prev => ({
                 ...prev,
                 ...initialConfig, // overwrite with DB values
-                sections: initialConfig.sections?.length ? initialConfig.sections : prev.sections // ensure sections aren't overwritten by empty if bug
+                sections: initialConfig.sections?.length ? initialConfig.sections : prev.sections, // ensure sections aren't overwritten by empty if bug
+                showExperience: initialConfig.showExperience !== undefined ? initialConfig.showExperience : (prev.showExperience ?? true),
+                showEducation: initialConfig.showEducation !== undefined ? initialConfig.showEducation : (prev.showEducation ?? true),
+                showCertifications: initialConfig.showCertifications !== undefined ? initialConfig.showCertifications : (prev.showCertifications ?? true),
+                showServices: initialConfig.showServices !== undefined ? initialConfig.showServices : (prev.showServices ?? false),
+                showHourlyRate: initialConfig.showHourlyRate !== undefined ? initialConfig.showHourlyRate : (prev.showHourlyRate ?? false)
             }));
         }
     }, [initialConfig]);
@@ -72,8 +81,7 @@ export function ProfileEditor({ initialConfig, user, projects }: ProfileEditorPr
         { id: "modern", name: "Modern ✦", description: "Linear-style. Bento grids, clean lines, subtle glows." },
         { id: "creative", name: "Creative 🎨", description: "Bold typography, sticky scrolling, vibrant." },
         { id: "dev", name: "Dev / Terminal 👨‍💻", description: "Monospace, neon accents, cyber aesthetic." },
-        { id: "zen", name: "Zen 🍵", description: "Editorial style. Serif fonts, paper texture, minimal." },
-        { id: "editable", name: "Editable (Live)", description: "A live editable preview with inline controls." }
+        { id: "zen", name: "Zen 🍵", description: "Editorial style. Serif fonts, paper texture, minimal." }
     ];
 
     const handleSave = async () => {
@@ -134,11 +142,12 @@ export function ProfileEditor({ initialConfig, user, projects }: ProfileEditorPr
                 </div>
 
                 <Tabs defaultValue="theme" className="w-full">
-                    <TabsList className="grid w-full grid-cols-4">
+                    <TabsList className="grid w-full grid-cols-5">
                         <TabsTrigger value="theme"><LayoutTemplate className="w-4 h-4" /></TabsTrigger>
                         <TabsTrigger value="style"><Palette className="w-4 h-4" /></TabsTrigger>
                         <TabsTrigger value="content"><Type className="w-4 h-4" /></TabsTrigger>
                         <TabsTrigger value="fx"><MonitorPlay className="w-4 h-4" /></TabsTrigger>
+                        <TabsTrigger value="professional"><Briefcase className="w-4 h-4" /></TabsTrigger>
                     </TabsList>
 
                     {/* Theme Tab */}
@@ -164,7 +173,7 @@ export function ProfileEditor({ initialConfig, user, projects }: ProfileEditorPr
                             ))}
                         </div>
                         {/* Hero & CTA picker for Showcase */}
-                        <div className="mt-4">
+                        {/* <div className="mt-4">
                             <Label className="text-sm font-medium">Hero Background (URL or color)</Label>
                             <Input
                                 placeholder="e.g. /uploads/hero.jpg or #0ea5e9"
@@ -187,7 +196,7 @@ export function ProfileEditor({ initialConfig, user, projects }: ProfileEditorPr
                                     </SelectContent>
                                 </Select>
                             </div>
-                        </div>
+                        </div> */}
                     </TabsContent>
 
                     {/* Style Tab (Colors & Fonts) */}
@@ -335,6 +344,69 @@ export function ProfileEditor({ initialConfig, user, projects }: ProfileEditorPr
                             </p>
                         </div>
                     </TabsContent>
+
+                    {/* Professional Sections Tab */}
+                    <TabsContent value="professional" className="space-y-6 mt-4">
+                           <div className="space-y-4">
+                               <Label className="text-base font-semibold">Show on Profile</Label>
+                               <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+                                   Choose which professional sections to display on your public profile.
+                               </p>
+                           
+                               <div className="space-y-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4">
+                                   <div className="flex items-center justify-between">
+                                       <Label htmlFor="showExperience" className="text-sm font-medium cursor-pointer">Work Experience</Label>
+                                       <input 
+                                           id="showExperience"
+                                           type="checkbox" 
+                                           checked={config.showExperience ?? true}
+                                           onChange={(e) => setConfig({ ...config, showExperience: e.target.checked })}
+                                           className="w-4 h-4 rounded border-slate-300 cursor-pointer"
+                                       />
+                                   </div>
+                                   <div className="flex items-center justify-between">
+                                       <Label htmlFor="showEducation" className="text-sm font-medium cursor-pointer">Education</Label>
+                                       <input 
+                                           id="showEducation"
+                                           type="checkbox" 
+                                           checked={config.showEducation ?? true}
+                                           onChange={(e) => setConfig({ ...config, showEducation: e.target.checked })}
+                                           className="w-4 h-4 rounded border-slate-300 cursor-pointer"
+                                       />
+                                   </div>
+                                   <div className="flex items-center justify-between">
+                                       <Label htmlFor="showCertifications" className="text-sm font-medium cursor-pointer">Certifications</Label>
+                                       <input 
+                                           id="showCertifications"
+                                           type="checkbox" 
+                                           checked={config.showCertifications ?? true}
+                                           onChange={(e) => setConfig({ ...config, showCertifications: e.target.checked })}
+                                           className="w-4 h-4 rounded border-slate-300 cursor-pointer"
+                                       />
+                                   </div>
+                                   <div className="flex items-center justify-between">
+                                       <Label htmlFor="showServices" className="text-sm font-medium cursor-pointer">Services</Label>
+                                       <input 
+                                           id="showServices"
+                                           type="checkbox" 
+                                           checked={config.showServices ?? false}
+                                           onChange={(e) => setConfig({ ...config, showServices: e.target.checked })}
+                                           className="w-4 h-4 rounded border-slate-300 cursor-pointer"
+                                       />
+                                   </div>
+                                   <div className="flex items-center justify-between">
+                                       <Label htmlFor="showHourlyRate" className="text-sm font-medium cursor-pointer">Hourly Rate</Label>
+                                       <input 
+                                           id="showHourlyRate"
+                                           type="checkbox" 
+                                           checked={config.showHourlyRate ?? false}
+                                           onChange={(e) => setConfig({ ...config, showHourlyRate: e.target.checked })}
+                                           className="w-4 h-4 rounded border-slate-300 cursor-pointer"
+                                       />
+                                   </div>
+                               </div>
+                           </div>
+                    </TabsContent>
                 </Tabs>
             </div>
 
@@ -372,30 +444,27 @@ export function ProfileEditor({ initialConfig, user, projects }: ProfileEditorPr
                     </div>
                 </div>
 
-                {/* Preview Viewport */}
-                <div className="flex-1 overflow-hidden bg-slate-200/50 dark:bg-zinc-950/50 grid place-items-center relative">
+                {/* Preview Viewport - Fully contained and responsive */}
+                <div className="flex-1 overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 dark:from-zinc-900 dark:to-zinc-950 grid place-items-center relative rounded-xl p-4">
                     <div
                         className={cn(
-                            "transition-all duration-500 ease-in-out shadow-2xl overflow-y-auto custom-scrollbar relative",
-                            viewMode === "mobile" ? "w-[375px] h-[812px] rounded-[3rem] border-[8px] border-zinc-900 bg-black" : "w-full h-full rounded-none border-0",
-                            // Ensure the preview content has the correct theme context
-                            config.colorMode === 'dark' ? 'dark' : config.colorMode === 'light' ? '' : 'system'
+                            "transition-all duration-500 ease-in-out shadow-2xl relative bg-white dark:bg-slate-950 flex flex-col",
+                            viewMode === "mobile" ? "w-96 rounded-3xl border-8 border-zinc-900" : "w-full h-full rounded-xl border border-slate-300 dark:border-zinc-700"
                         )}
-                        style={viewMode === 'mobile' ? { boxShadow: '0 0 0 2px #333' } : {}}
+                        style={viewMode === 'mobile' ? { height: '85vh', maxHeight: '812px' } : {}}
                     >
                         {/* Mobile Notch */}
                         {viewMode === 'mobile' && (
-                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120px] h-[30px] bg-zinc-900 rounded-b-2xl z-50 pointer-events-none" />
+                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-black rounded-b-3xl z-50" />
                         )}
 
-                        {/* Content Wrapper - Applies theme variables correctly */}
-                        <div className="min-h-full bg-background text-foreground animate-in fade-in duration-300">
+                        {/* Content Wrapper - Fully confined with overflow handling */}
+                        <div className="w-full h-full overflow-y-auto bg-background text-foreground animate-in fade-in duration-300">
                             {config.theme === 'premium' && <ThemePremium user={user} projects={projects} config={config} />}
                             {config.theme === 'modern' && <ThemeModern user={user} projects={projects} config={config} />}
                             {config.theme === 'creative' && <ThemeCreative user={user} projects={projects} config={config} />}
                             {config.theme === 'dev' && <ThemeDev user={user} projects={projects} config={config} />}
                             {config.theme === 'zen' && <ThemeZen user={user} projects={projects} config={config} />}
-                            {config.theme === 'editable' && <ThemeEditable user={user} projects={projects} config={config} />}
                         </div>
                     </div>
                 </div>
