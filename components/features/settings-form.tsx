@@ -212,14 +212,14 @@ function SettingsForm({ user, projects = [] }: { user: any, projects?: any[] }) 
                             {formData.experience?.map((exp: any, i: number) => (
                                 <div key={i} className="p-4 border rounded-md space-y-3 bg-slate-50 dark:bg-slate-800/50">
                                     <div className="grid grid-cols-2 gap-3">
-                                        <Input placeholder="Job Title" value={exp.title} onChange={(e) => updateExperience(i, "title", e.target.value)} />
-                                        <Input placeholder="Company" value={exp.company} onChange={(e) => updateExperience(i, "company", e.target.value)} />
+                                        <Input placeholder="Job Title" value={exp.title || ""} onChange={(e) => updateExperience(i, "title", e.target.value)} />
+                                        <Input placeholder="Company" value={exp.company || ""} onChange={(e) => updateExperience(i, "company", e.target.value)} />
                                     </div>
                                     <div className="grid grid-cols-2 gap-3">
-                                        <Input placeholder="Start Date" value={exp.startDate} onChange={(e) => updateExperience(i, "startDate", e.target.value)} />
-                                        <Input placeholder="End Date" value={exp.endDate} onChange={(e) => updateExperience(i, "endDate", e.target.value)} />
+                                        <Input placeholder="Start Date" value={exp.startDate || ""} onChange={(e) => updateExperience(i, "startDate", e.target.value)} />
+                                        <Input placeholder="End Date" value={exp.endDate || ""} onChange={(e) => updateExperience(i, "endDate", e.target.value)} />
                                     </div>
-                                    <Textarea placeholder="Description of role..." value={exp.description} onChange={(e) => updateExperience(i, "description", e.target.value)} />
+                                    <Textarea placeholder="Description of role..." value={exp.description || ""} onChange={(e) => updateExperience(i, "description", e.target.value)} />
                                     <div className="flex justify-end">
                                         <Button variant="ghost" size="sm" onClick={() => removeExperience(i)} className="text-red-500 hover:text-red-600 hover:bg-red-50"><Trash2 className="w-3 h-3 mr-1" /> Remove</Button>
                                     </div>
@@ -228,9 +228,7 @@ function SettingsForm({ user, projects = [] }: { user: any, projects?: any[] }) 
                             {(!formData.experience || formData.experience.length === 0) && <p className="text-sm text-muted-foreground italic">No experience added yet.</p>}
                         </div>
                     </section>
-
                     <hr />
-
                     {/* Education */}
                     <section className="space-y-4">
                         <div className="flex justify-between items-center">
@@ -241,11 +239,11 @@ function SettingsForm({ user, projects = [] }: { user: any, projects?: any[] }) 
                             {formData.education?.map((edu: any, i: number) => (
                                 <div key={i} className="p-4 border rounded-md space-y-3 bg-slate-50 dark:bg-slate-800/50">
                                     <div className="grid grid-cols-2 gap-3">
-                                        <Input placeholder="School / University" value={edu.school} onChange={(e) => updateEducation(i, "school", e.target.value)} />
-                                        <Input placeholder="Degree" value={edu.degree} onChange={(e) => updateEducation(i, "degree", e.target.value)} />
+                                        <Input placeholder="School / University" value={edu.school || ""} onChange={(e) => updateEducation(i, "school", e.target.value)} />
+                                        <Input placeholder="Degree" value={edu.degree || ""} onChange={(e) => updateEducation(i, "degree", e.target.value)} />
                                     </div>
                                     <div className="grid grid-cols-2 gap-3">
-                                        <Input placeholder="Graduation Year" value={edu.graduationYear} onChange={(e) => updateEducation(i, "graduationYear", e.target.value)} />
+                                        <Input placeholder="Graduation Year" value={edu.graduationYear || ""} onChange={(e) => updateEducation(i, "graduationYear", e.target.value)} />
                                     </div>
                                     <div className="flex justify-end">
                                         <Button variant="ghost" size="sm" onClick={() => removeEducation(i)} className="text-red-500 hover:text-red-600 hover:bg-red-50"><Trash2 className="w-3 h-3 mr-1" /> Remove</Button>

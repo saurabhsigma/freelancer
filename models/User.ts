@@ -22,8 +22,7 @@ const UserSchema = new Schema(
             {
                 title: { type: String },
                 company: { type: String },
-                startDate: { type: Date },
-                endDate: { type: Date },
+
                 current: { type: Boolean, default: false },
                 description: { type: String }
             }
@@ -78,12 +77,12 @@ const UserSchema = new Schema(
                     order: { type: Number }
                 }
             ],
-               // Visibility toggles for professional sections
-               showExperience: { type: Boolean, default: true },
-               showEducation: { type: Boolean, default: true },
-               showCertifications: { type: Boolean, default: true },
-               showServices: { type: Boolean, default: false },
-               showHourlyRate: { type: Boolean, default: false },
+            // Visibility toggles for professional sections
+            showExperience: { type: Boolean, default: true },
+            showEducation: { type: Boolean, default: true },
+            showCertifications: { type: Boolean, default: true },
+            showServices: { type: Boolean, default: false },
+            showHourlyRate: { type: Boolean, default: false },
             customDomain: { type: String, sparse: true }
         }
     },

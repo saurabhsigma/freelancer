@@ -113,31 +113,57 @@
 }
 
 @media print {
+  @page {
+    margin: 0;
+    size: auto;
+  }
+
+  body {
+    visibility: hidden;
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  /* Hide everything by default */
   body * {
     visibility: hidden;
   }
 
+  /* Unhide the resume preview and its children */
   #resume-preview,
   #resume-preview * {
     visibility: visible;
   }
 
   #resume-preview {
-    position: fixed;
+    position: fixed !important;
     left: 0;
     top: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    min-height: 100vh;
     margin: 0;
-    padding: 0;
+    padding: 20px;
     background: white !important;
-    z-index: 9999;
+    z-index: 99999;
     overflow: visible !important;
+    transform: none !important;
+    zoom: 1 !important;
+    border: none !important;
+    box-shadow: none !important;
   }
 
-  /* Ensure background colors are printed */
+  /* Reset container styles that might clip content */
+  #resume-preview-container {
+    overflow: visible !important;
+    position: static !important;
+    height: auto !important;
+  }
+
+  /* Ensure text colors are dark for print and background graphics are on */
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    text-shadow: none !important;
   }
 }

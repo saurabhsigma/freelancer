@@ -7,6 +7,7 @@ import { getSession } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
 export async function updateProfile(data: {
+    name?: string; // Added name field
     username?: string;
     bio?: string;
     headline?: string;
@@ -39,6 +40,7 @@ export async function updateProfile(data: {
 
         // precise update
         const update: any = {};
+        if (data.name) update.name = data.name; // Added name update logic
         if (data.username) {
             // Sanitize username: lowercase, trim, remove special chars
             update.username = data.username.toLowerCase().trim().replace(/[^a-z0-9-]/g, '');
@@ -57,11 +59,17 @@ export async function updateProfile(data: {
         if (data.hourlyRate !== undefined) update.hourlyRate = data.hourlyRate;
         if (data.availability) update.availability = data.availability;
 
+        if (data.hourlyRate !== undefined) update.hourlyRate = data.hourlyRate;
+        if (data.availability) update.availability = data.availability;
+
+        console.log("Updating profile with experience:", JSON.stringify(update.experience, null, 2));
+
         await User.findByIdAndUpdate(session.user.id, update);
         revalidatePath("/settings");
         revalidatePath(`/profile/${data.username || session.user.username}`);
         return { success: true };
     } catch (error) {
+        console.error("Profile update error:", error);
         return { error: "Failed to update profile" };
     }
 }
